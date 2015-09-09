@@ -140,6 +140,7 @@ def theta_cost(mu,N,Bmax,P,power,Num_queue):
 
     return RHS - V[sub]
 
+
 def PIimp_1MBS_2SBS(V,sub,N,Bmax,P,power,Num_queue,u_set):
     """
     policy improvement step
@@ -324,10 +325,11 @@ for num_avg in np.arange(0,num_of_iter):
     
     V = np.zeros(N+1)
     
+    theta_o = 0
+    theta_n = 1
     num = 0
 
-    while np.any(np.not_equal(mu_n,mu_o)):
-#        start = time.time()
+    while np.any(np.not_equal(mu_n,mu_o)) and abs(theta_o - theta_n) > 0.01:
         theta_o = theta_cost(mu_o,N,Bmax,P,power,N_queue)
         mu_o = copy.deepcopy(mu_n)
 
@@ -347,8 +349,8 @@ for num_avg in np.arange(0,num_of_iter):
             mu_n_0[sub],mu_n_1[sub],mu_n_2[sub] = PIimp_1MBS_2SBS(V,sub,N,Bmax,P,power,N_queue, u_set)
         
         mu_n = np.array([mu_n_0, mu_n_1, mu_n_2])  
-        diff= np.count_nonzero(mu_n-mu_o)
-        print ("number of diffences:", diff)
+        diff = np.count_nonzero(mu_n-mu_o)
+        print("number of diffences:", diff)
         t_imp = time.time()-start_imp
         print("one iteration of PIimp:", t_imp)  
         num = num+1
@@ -356,12 +358,12 @@ for num_avg in np.arange(0,num_of_iter):
         
         # compare the average costs of the two policies in adjacent iterations
         theta_n = theta_cost(mu_n,N,Bmax,P,power,N_queue)
-        print ("theta_o:", theta_o)
-        print ("theta_n:", theta_n)       
+        print("theta_o:", theta_o)
+        print("theta_n:", theta_n)       
         
         t.append(t_eva+t_imp)
         
-print ("total time:", sum(t))
+print("total time:", sum(t))
 
 file_name = ["PIA_M0_",str(M0), "_M1_",str(M1), "_M2_", str(M2), "_SBS_2_N", str(N[0]),time.strftime("_%Y%m%d_%H_%M"), ".mat"]
 file_name = "".join(file_name)
