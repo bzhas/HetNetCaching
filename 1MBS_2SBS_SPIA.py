@@ -330,7 +330,7 @@ for num_avg in np.arange(0,num_of_iter):
     theta_n = 1
     num = 0
     mu_temp = []
-    while np.any(np.not_equal(mu_n,mu_o)) and abs(theta_o - theta_n) > 0.01:
+    while np.any(np.not_equal(mu_n,mu_o)) and theta_o > theta_n:
 
         theta_o = theta_cost(mu_o,N,Bmax,P,power,N_queue)
         mu_o = copy.deepcopy(mu_n)
